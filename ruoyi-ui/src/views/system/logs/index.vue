@@ -8,7 +8,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="date">
       <el-date-picker
-      v-model="queryParams.date" 
+      v-model="queryParams.date"
       type="date"
       placeholder="选择日期"
       format="yyyy 年 MM 月 dd 日"
@@ -68,7 +68,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="logsList" @selection-change="handleSelectionChange">
-      
+
       <el-table-column
        width="75"
       label="周几">
@@ -103,7 +103,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -117,7 +117,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="日期" prop="date">
           <el-date-picker
-            v-model="form.date" 
+            v-model="form.date"
             type="date"
             placeholder="选择日期"
             format="yyyy 年 MM 月 dd 日"
@@ -183,7 +183,7 @@ export default {
   },
   created() {
     this.getUserListOptions()
-    
+
   },
   methods: {
     /** 查询周六记录列表 */
@@ -247,7 +247,7 @@ export default {
         if (valid) {
         //  let tmpStr = this.selectUserListArray.toString()
         //   this.form.userList = tmpStr
-          debugger
+
           if (this.form.id != null) {
             updateLogs(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
@@ -281,7 +281,7 @@ export default {
       }, `logs_${new Date().getTime()}.xlsx`)
     },
     getUserNameByIds(rowData){
-      
+
       let _this = this
       let userList = rowData.userList
       let tmpArray = userList.split(',')
@@ -301,7 +301,7 @@ export default {
     getWeekDayByDate(rowData){
       let _this = this
       let date = rowData.date
-      debugger
+
         var dateArray = date.split("-");
         date = new Date(dateArray[0], parseInt(dateArray[1] - 1), dateArray[2]);
         return "周" + "日一二三四五六".charAt(date.getDay());
@@ -313,7 +313,7 @@ export default {
         let name =""
         arr.forEach(item=>{
          if(item.dictValue == id) {
-           name = item.dictLabel 
+           name = item.dictLabel
          }
         })
         return name
@@ -322,10 +322,10 @@ export default {
     getUserListOptions(){
       let _this = this
       _this.getDicts("sys_user_list").then(response => {
-       
+
        let tmpArray = response.data
        tmpArray.sort(function(a,b){
-         debugger
+
          return a.dictLabel.localeCompare(b.dictLabel)
        })
        _this.userListOptions = tmpArray
@@ -334,7 +334,7 @@ export default {
     }
   },
   mounted(){
-    
+
   }
 };
 </script>

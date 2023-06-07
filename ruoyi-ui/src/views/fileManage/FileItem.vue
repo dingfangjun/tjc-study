@@ -1,7 +1,7 @@
 <template>
     <div>
         <div  @contextmenu.prevent="clickRight()" ref="showPanel" style="position:relative;width:150px;height:150px;padding:10px;margin:10px;float:left;text-align:center;border:1px solid rgb(92,194,237);border-radius:5px;cursor:pointer" @dblclick="dbClickFile">
-            
+
             <img  v-if="fileType === 'director'" style="width:60px;height:60px;margin:20px 35px 10px 35px" src="@/assets/images/director.png" />
             <img  v-if="fileType === 'img'" style="width:60px;height:60px;margin:20px 35px 10px 35px" src="@/assets/images/img.png" />
             <img  v-if="fileType === 'movie'" style="width:60px;height:60px;margin:20px 35px 10px 35px" src="@/assets/images/movie.png" />
@@ -60,7 +60,7 @@ export default ({
         }
     },
     watch:{
-       parentFileName:{ 
+       parentFileName:{
         immediate:true,
         handler:   function(newVal,oldVal){
                            this.fileName = newVal
@@ -130,7 +130,7 @@ export default ({
         hideFileMoveDialog(){
             this.fileMoveDialogVisible = false
         },
-        //避免操作到系统文件，过滤掉含特殊字符的文件名        
+        //避免操作到系统文件，过滤掉含特殊字符的文件名
          filterFileName(fileName){
                 let spec=/[\s,<>.{}~!@#$%^&*]/;
                 return (spec.test(fileName))
@@ -170,7 +170,7 @@ export default ({
         },
         sureMoveFile(targetPath){
         let targetFile = targetPath +"\\"+this.fileName
-        debugger
+
         let option ={fileName:this.fileName,targetPath:targetFile}
         this.hideFileMoveDialog()
         this.hideMenu()
@@ -210,7 +210,7 @@ export default ({
     model: {
         prop: "value",
         event: "change"
-        }  
+        }
 })
 </script>
 <style scoped>

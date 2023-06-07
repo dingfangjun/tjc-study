@@ -25,14 +25,14 @@
                     :auto-upload="false">
                     <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                 </el-upload>
-        </el-form-item> 
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit()"
             >提交</el-button
           >
-        </el-form-item>      
+        </el-form-item>
         </el-form>
-        </el-dialog>    
+        </el-dialog>
         <file-item v-for="(item,index) in fileNameList" :key="index" :parentFileName="item" @dbClickFile="dbClickFile" @deleteFile="deleteFile" @reNameFileName="reNameFileName" @sureMoveFile="sureMoveFile"></file-item>
     </div>
 </template>
@@ -67,9 +67,9 @@ export default ({
                     headers:{
                         'Content-Type': 'application/json; charset=UTF-8',
                     },
-                    responseType:'blob' 
+                    responseType:'blob'
                 }).then(response =>{
-                    debugger
+
                     var blob = new Blob([response])
                     var downloadElement = document.createElement('a');
                     var href = window.URL.createObjectURL(blob); //创建下载的链接
@@ -80,10 +80,10 @@ export default ({
                     document.body.removeChild(downloadElement); //下载完成移除元素
                     window.URL.revokeObjectURL(href); //释放掉blob对象
                     console.log(response);
-                }) 
+                })
         },
         getFileList(directorName){
-            let _this = this 
+            let _this = this
             let filePath = ""
             if(directorName === null || directorName === undefined || directorName === ""){
                 filePath = "C:\\resources"
@@ -96,21 +96,21 @@ export default ({
                         method: 'get',
                         params:{'path':filePath}
                     }).then(res =>{
-                        debugger
+
                            if(res.length>0){
-                            _this.recentPath = filePath.endsWith('\\') ?  filePath : filePath+'\\'  
+                            _this.recentPath = filePath.endsWith('\\') ?  filePath : filePath+'\\'
                             _this.fileNameList = res.filter(filterFileName)
                            }
                            else{
                                _this.$message.info("未发现文件")
                            }
 
-                    }) 
-            //避免操作到系统文件，过滤掉含特殊字符的文件名        
+                    })
+            //避免操作到系统文件，过滤掉含特殊字符的文件名
             function filterFileName(fileName){
                 let spec=/[,<>{}~!@#$%^&*]/;
                 return (!spec.test(fileName))
-            }        
+            }
         },
         addFile(){
             this.dialogVisible = true
@@ -129,7 +129,7 @@ export default ({
                     data:fd,
                     headers:{
                                 'Content-Type': 'multipart/form-data', // 文件上传
-                                'Authorization': 'Bearer ' + getToken() 
+                                'Authorization': 'Bearer ' + getToken()
                             }
                 }).then(res =>{
                     _this.dialogVisible = false
@@ -156,21 +156,21 @@ export default ({
                         method: 'get',
                         params:{'filePath':filePath}
                     }).then(res =>{
-                        debugger
+
                     })
         },
         photoHandleAvatarSuccess(file, fileList) {
             this.selectedFileList=[]
             for (let i = 0; i < 1; i++) {
                 let item = fileList[i];
-                debugger
+
                 this.selectedFileName = item.name
                 this.selectedFileList.push(item.raw);
-                debugger
+
             }
         },
         dbClickFile(option){
-            debugger
+
             //文件类型director文件夹  img图片    movie视频   audio音频   excel表格   word文档   zip压缩文件   file（未知类型）文件
             let {fileType,fileName} = option
             if(fileType === 'director'){
@@ -179,21 +179,21 @@ export default ({
             else{
                 this.downloadFile(this.recentPath,fileName)
             }
-            
+
         },
         reNameFileName(option){
-            debugger
+
             //文件类型director文件夹  img图片    movie视频   audio音频   excel表格   word文档   zip压缩文件   file（未知类型）文件
             let {fileName,newFileName} = option
             let oldPathName = this.recentPath + fileName
-            debugger
+
             let tmpSplitArray  =fileName.split(".")
             let newName = ""
             if(Array.isArray(tmpSplitArray) && tmpSplitArray.length===2){
                 newName = newFileName+"."+tmpSplitArray[1]
             }
             else{
-               newName = newFileName 
+               newName = newFileName
             }
                 let data ={filePath:oldPathName,newName:newName}
                 request({

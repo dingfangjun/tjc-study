@@ -46,7 +46,7 @@ export default ({
         addObjMtl(){
             let _this = this
             objloader("people").then(function(geo){
-                debugger
+
                 // 加载后的一些编辑操作
                 _this.loadObj = geo.obj
                 geo.obj.scale.set(8,8,8);//网格模型缩放
@@ -60,10 +60,10 @@ export default ({
             window.addEventListener("keydown", this.keydown, false);
         },
         keydown(e){
-            debugger
+
                 let _this = this
                 if(e.code === "ArrowLeft" && _this.loadObj){
-                    _this.loadObj.rotation.y += (Math.PI/180)*5; 
+                    _this.loadObj.rotation.y += (Math.PI/180)*5;
                     _this.renderScene()
                 }
                 else if (e.code === "ArrowRight" && _this.loadObj){
@@ -144,11 +144,11 @@ export default ({
     mounted(){
        this.init()
        this.addmeth()
-    //   this.renderText() 
+    //   this.renderText()
      //  this.addSceneGroupGeo()
     //   this.animate()
     this.addObjMtl()
-     
+
     }
 })
 </script>

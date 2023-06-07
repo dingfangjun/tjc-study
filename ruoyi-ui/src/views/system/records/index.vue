@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="日期" prop="date">
       <el-date-picker
-      v-model="queryParams.date" 
+      v-model="queryParams.date"
       type="date"
       placeholder="选择日期"
       format="yyyy 年 MM 月 dd 日"
@@ -98,7 +98,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -112,7 +112,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="日期" prop="date">
           <el-date-picker
-            v-model="form.date" 
+            v-model="form.date"
             type="date"
             placeholder="选择日期"
             format="yyyy 年 MM 月 dd 日"
@@ -268,7 +268,7 @@ export default {
       }, `records_${new Date().getTime()}.xlsx`)
     },
     getUserNameByIds(rowData){
-      
+
       let _this = this
       let userlist = rowData.userlist
       let tmpArray = userlist.split(',')
@@ -288,7 +288,7 @@ export default {
     getWeekDayByDate(rowData){
       let _this = this
       let date = rowData.date
-      debugger
+
         var dateArray = date.split("-");
         date = new Date(dateArray[0], parseInt(dateArray[1] - 1), dateArray[2]);
         return "周" + "日一二三四五六".charAt(date.getDay());
@@ -300,7 +300,7 @@ export default {
         let name =""
         arr.forEach(item=>{
          if(item.dictValue == id) {
-           name = item.dictLabel 
+           name = item.dictLabel
          }
         })
         return name
@@ -309,10 +309,10 @@ export default {
   },
     mounted(){
      this.getDicts("sys_user_list").then(response => {
-       
+
        let tmpArray = response.data
        tmpArray.sort(function(a,b){
-         debugger
+
          return a.dictLabel.localeCompare(b.dictLabel)
        })
        this.userListOptions = tmpArray

@@ -10,7 +10,7 @@
            </el-row>
         <el-checkbox-group v-model="userListArray" size="small"  style="margin-top:20px">
             <el-checkbox v-for="(item,index) in userListOptions" style="width:80px;margin-top:8px;margin-left:10px" :key="index" :label="item.dictValue" border>{{item.dictLabel}}</el-checkbox>
-           
+
         </el-checkbox-group>
         </div>
 </template>
@@ -32,17 +32,17 @@ export default ({
         }
     },
     watch:{
-       userListStr:{ 
+       userListStr:{
             immediate:true,
             handler:   function(newVal,oldVal){
                           let tmpArray = []
                           if(newVal && newVal.length > 0){
-                              tmpArray = newVal.split(',')  
-                          } 
+                              tmpArray = newVal.split(',')
+                          }
                           this.userListArray = tmpArray
                         }
         },
-        userListArray:{ 
+        userListArray:{
             immediate:true,
             handler:   function(newVal,oldVal){
                         let tmpStr = newVal.toString()
@@ -56,8 +56,6 @@ export default ({
     },
     methods:{
         getMarkUserList(){
-            
-            debugger
             let _this = this
             let reg = /[0-9]{1,2}/;
             let tmpArr = _this.markListStr.split(reg);
@@ -69,18 +67,16 @@ export default ({
                         if(res && markIdList.indexOf(res+'')<0){
                             markIdList.push(res+'')
                         }
-                        
+
                     }
-                    
+
                 })
-                debugger
                 if(markIdList.length>0){
                     //最后赋值给userListArray就行，自动监听处理
                     _this.userListArray = markIdList
                     _this.markListStr =""
-                    debugger
                 }
-                
+
             }
             else{
                 this.$message.info("文字格式不正确，参考格式： 1小明2小红3小方....")
@@ -90,7 +86,6 @@ export default ({
             let userId = null
             this.userListOptions.forEach(item =>{
                 if(item.dictLabel === userName.trim()){
-                    debugger
                     userId = item.dictValue
                 }
             })
@@ -110,7 +105,7 @@ export default ({
         });
 
         listUser2({pageNum:1,pageSize:200}).then(response => {
-            debugger
+
         })
   }
 })

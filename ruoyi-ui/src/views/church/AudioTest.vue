@@ -85,7 +85,7 @@ export default ({
                     depth:2,
                     styles:{
                         'fill':function(properties){
-                            
+
                             let colorArray = []
                             colorArray.push("rgba(3,52,71,1)")
                             colorArray.push("rgba(162,232,200,1)")
@@ -101,10 +101,10 @@ export default ({
                         },
                         'province-stroke':'cornflowerblue',
                         'city-stroke': 'rgba(255,255,255,0.5)',//中国地级市边界
-                        'county-stroke':  
-                        //中国区县边界 
+                        'county-stroke':
+                        //中国区县边界
                         function(properties){
-                            
+
                             let colorArray = ["rgba(255,255,255,1)","rgba(255,255,255,1)","rgba(255,255,255,1)","rgba(255,255,255,1)","rgba(255,255,255,1)"]
                             let codeArray = ["340101","340102","340103","340104","340111"]
                             let  adcode = properties.adcode + '';
@@ -113,14 +113,14 @@ export default ({
                             let color = index > -1 ? colorArray[index] : "rgba(3,52,71,0)"
                             return color;
                         },
-                        
+
                     }
                 })
                 _this.disProvince = disProvince
                 _this.initUserList()
-                 disProvince.setMap(map); 
-                disProvince.setOpacity(0) 
-                this.alphaValue = 0 
+                 disProvince.setMap(map);
+                disProvince.setOpacity(0)
+                this.alphaValue = 0
                     }).catch(e=>{
                         console.log(e);
                     })
@@ -128,8 +128,8 @@ export default ({
             // 根据关键字进行搜索
             searchPlace(placeName){
                     this.autoComplete.search(placeName, function(status, result) {
-                        
-                    })  
+
+                    })
             },
             alphaValueChange(){
                 let alphaVlue = this.alphaValue * 0.01
@@ -162,14 +162,13 @@ export default ({
                     tmpArray = item.remark.split(',')
                 }
                 if(Array.isArray(tmpArray) && tmpArray.length === 3 ){
-                    debugger
                     let locationName =  tmpArray[0]
                     let  marker = new AMap.Marker({
                         position: new  AMap.LngLat(parseFloat(tmpArray[1]),parseFloat(tmpArray[2])),
                         icon: '//vdata.amap.com/icons/b18/1/7.png',
                         anchor: 'bottom-center',
                     });
-                    let lngLat = [] 
+                    let lngLat = []
                     lngLat.push(tmpArray[1])
                     lngLat.push(tmpArray[2])
                     let infoWindow = new AMap.InfoWindow({
@@ -215,7 +214,7 @@ export default ({
             securityJsCode:'11ff7aa88b2618bc094bfb45dcb2aed4',
         }
         this.initMap()
-    }   
+    }
 })
 </script>
 <style  scoped>

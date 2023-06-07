@@ -112,10 +112,10 @@
 
 <script>
 import {
-  listUser,
-  deptTreeSelect
+  listUser
 } from "@/api/system/user";
 import {saveCheck} from "@/api/system/check";
+import {treeselect} from "@/api/system/dept";
 import {getToken} from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -212,7 +212,7 @@ export default {
     },
     /** 查询片区下拉树结构 */
     getDeptTree() {
-      deptTreeSelect().then(response => {
+      treeselect().then(response => {
         this.deptOptions = response.data;
       });
     },

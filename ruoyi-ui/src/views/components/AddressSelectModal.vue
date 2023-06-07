@@ -74,15 +74,13 @@ export default ({
             })
         },
         poiSearch(){
-            
+
             let _this =this
             let isDoSearch = (_this.poiSearchName != '')
             if(isDoSearch){
-                debugger
                 let tmpStrArray = _this.poiSearchName.split(",")
                 this.placeSearch.search(tmpStrArray[0], function (status, result) {
                     // 查询成功时，result即对应匹配的POI信息
-                    debugger
                     if(result.info){
                         let poiList = result.poiList.pois
                         _this.markList = poiList
@@ -90,23 +88,22 @@ export default ({
                         poiList.forEach(element => {
                             _this.createMarker(element)
                         });
-                    }        
+                    }
                 })
             }
         },
         createMarker(item){
             let _this = this
             if(_this.map){
-                debugger
                 let AMap = _this.aMapUtil
                 let marker = new AMap.Marker({
                         position: new AMap.LngLat(item.location.lng,item.location.lat),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
                         title: item.name
                     });
                 marker.on('click',(e)=>{
-                    
-                }) 
-                _this.map.add(marker)   
+
+                })
+                _this.map.add(marker)
             }
         },
         clearMap(){
@@ -120,7 +117,7 @@ export default ({
             this.map.setZoom(19)
         },
         sureSelect(item){
-            
+
             let name = item.name
             this.addressLngLat.lng = item.location.lng
             this.addressLngLat.lat = item.location.lat
@@ -135,15 +132,15 @@ export default ({
             return params
         }
     },
-    watch:{       
-        addressName:{ 
+    watch:{
+        addressName:{
         immediate:true,
         handler:   function(newVal,oldVal){
                            this.addressValue = newVal
                            this.poiSearchName = newVal
                           }
       },
-       addressValue:{ 
+       addressValue:{
         immediate:true,
         handler:   function(newVal,oldVal){
                           this.poiSearchName = newVal

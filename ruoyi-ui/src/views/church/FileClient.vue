@@ -11,7 +11,7 @@
     <el-row>
       <el-col><el-tag style="float:left;margin:10px 20px;"><span style="letter-spacing:2px">当前路径：{{tmpSearchPath}}</span></el-tag></el-col>
     </el-row>
-    
+
     <el-card class="box-card">
     <div v-for="(item,index) in fileNameList" :key="index" class="file-item">
       <file-item :fileName='item' :pathName='tmpSearchPath' @openFolder='openFolder' @downloadFile='downloadFile'></file-item>
@@ -27,7 +27,7 @@ export default ({
    name: 'FileClient',
    components:{FileItem},
   data () {
-    return {  
+    return {
       fileNameList:[],
       tmpSearchPath : '/'
     }
@@ -48,12 +48,10 @@ export default ({
       },
       //下载文件
       downloadFile(fileName){
-        debugger
         let _this = this
         let tmpPath = _this.tmpSearchPath +'/'+fileName
         let fullpath = 'http://119.29.187.162:8083/path' + tmpPath
       //    let fullpath = 'http://localhost:8083/path' + tmpPath
-        debugger
           axios({method:'GET',url:fullpath,responseType:'blob'})
           .then(res => {
               let name = fileName

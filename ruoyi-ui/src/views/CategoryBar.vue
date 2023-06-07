@@ -47,7 +47,6 @@ export default ({
         /** 查询每日读经列表 */
         getEveryDayLogList() {
         listRecordsLogsByMonth({pageNum:1,pageSize:40,date:this.selectMonth}).then(response => {
-            debugger
             if(response.total > 0){
                 let tmpArray =[]
                 response.rows.forEach(item =>{
@@ -62,7 +61,7 @@ export default ({
         getSaturdayLogList() {
         listSaturdayLogsByMonth({date:this.selectMonth,pageNum:1,pageSize:40}).then(response => {
             if(response.total > 0){
-                debugger
+
                 let tmpArray =[]
                 response.rows.forEach(item =>{
                     let thisArray = item.userList.split(',')
@@ -85,10 +84,9 @@ export default ({
             }
         },
         createEcharts(dataRows){
-            debugger
+
             let countDataArray = dataRows.sort();
             let x_array = [...new Set(countDataArray)]
-            debugger
             let y_array = []
             let x_name_array =[]
             for(let i=0;i<x_array.length;i++){
@@ -99,7 +97,7 @@ export default ({
 
             let chartDom = document.getElementById('pdfDom');
             let myChart = echarts.init(chartDom);
-            let option = { 
+            let option = {
                         tooltip: {
                                 trigger: 'axis',
                                 axisPointer: {
@@ -141,7 +139,7 @@ export default ({
             this.userListOption.forEach(
                 item =>{
                     if(item.dictValue == id) {
-                    name = item.dictLabel 
+                    name = item.dictLabel
                     }
                 }
             )

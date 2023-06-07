@@ -1,5 +1,5 @@
 <template>
-  <div  style="background: url(https://images.unsplash.com/photo-1509599589979-3b5a15d2816e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80) 0 / cover fixed;">    
+  <div  style="background: url(https://images.unsplash.com/photo-1509599589979-3b5a15d2816e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80) 0 / cover fixed;">
     <el-row style="margin-top:5px" :gutter="20">
       <el-col :span="1.3" :key="index" v-for="(item,index) in chapterList" style="margin-top:5px">
         <el-button :type="item.chapterName===tmpChapterName?'success':'primary'" @click="reRenderData(item,index)">{{item.chapterName}}</el-button>
@@ -18,9 +18,9 @@
             <span v-if="index.split(':')[0]==tmpParagraph">{{i}}</span>
             <!-- <span>{{tmpChapterData[i]}}</span> -->
           </span>
-          
-          
-          
+
+
+
           <footer>—
             <cite>
               {{tmpChapterName}}第{{tmpParagraph}}章
@@ -67,13 +67,13 @@ export default {
   },
   methods: {
     reRenderData(item,index){
-      debugger
+
       this.tmpChapterName = item.chapterName
       this.tmpChapterData = item.data
       this.tmpMaxParagraph = item.maxParagraph
     },
     paragraphChange(number){
-      debugger
+
       this.tmpParagraph = number
     }
   },

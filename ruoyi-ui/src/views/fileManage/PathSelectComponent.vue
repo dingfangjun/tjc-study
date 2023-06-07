@@ -8,8 +8,8 @@
                 </el-button>
             </el-col>
         </el-row>
-        
-        
+
+
          <el-tag style="margin-top:5px;margin-right:10px" type="success" v-for="(item,index) in fileList" :key="index"  @click="clickPath(item)">{{item}}</el-tag>
          <el-tag style="margin-top:5px;margin-right:10px" type="success" @click="goToRootPath">跳至最上级</el-tag>
     </div>
@@ -32,7 +32,7 @@ export default ({
          }
      },
      watch:{
-            rootPath:{ 
+            rootPath:{
                 immediate:true,
                 handler:   function(newVal,oldVal){
                                 this.fileName = newVal
@@ -42,7 +42,7 @@ export default ({
      },
      methods:{
         getFileList(directorName){
-            let _this = this 
+            let _this = this
             let filePath = ""
             if(directorName === null || directorName === undefined || directorName === ""){
                 filePath = "D:"
@@ -55,19 +55,19 @@ export default ({
                         method: 'get',
                         params:{'path':filePath}
                     }).then(res =>{
-                        debugger
+
                            if(res.length>0){ _this.fileList = res.filter(filterFileName)
                            }
                            else{
                                _this.$message.info("未发现子目录")
                            }
 
-                    }) 
-            //避免操作到系统文件，过滤掉含特殊字符的文件名        
+                    })
+            //避免操作到系统文件，过滤掉含特殊字符的文件名
             function filterFileName(fileName){
                 let spec=/[,.<>{}~!@#$%^&*]/;
                 return (!spec.test(fileName))
-            }        
+            }
         },
             clickPath(val){
                 let path = this.selectPath + '\\' + val
@@ -91,7 +91,7 @@ export default ({
 
                 var uuid = s.join("");
                 return uuid;
-            },  
+            },
             sureMoveFIle(){
                 this.$emit("sureMoveFile",this.selectPath)
             }

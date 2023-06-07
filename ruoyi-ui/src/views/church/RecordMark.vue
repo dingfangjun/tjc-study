@@ -1,7 +1,7 @@
 <template>
   <div>
   <el-row style="margin-top:5px">
-    <span style="margin-left:20px;float:left">考勤日期：</span>    
+    <span style="margin-left:20px;float:left">考勤日期：</span>
     <el-date-picker
      style="margin-left:10px;float:left"
       v-model="selectedDate"
@@ -13,10 +13,10 @@
     <el-row style="margin-top:10px">
     <span style="float:left">周六考勤人员：</span><span style="color:rgb(0,255,89);float:left">{{checkList}}</span>
     </el-row>
-    
+
     <el-card style="margin-top:50px">
       <el-checkbox-group v-model="checkList">
-        <el-checkbox v-for="(item,index) in teammerList" :key="index" :label="item.name"></el-checkbox> 
+        <el-checkbox v-for="(item,index) in teammerList" :key="index" :label="item.name"></el-checkbox>
       </el-checkbox-group>
     </el-card>
     <el-row>
@@ -50,9 +50,9 @@ export default ({
                     {name:'杨晨阳',groudName:'待定'},{name:'江祖正',groudName:'待定'},{name:'韩萍萍',groudName:'待定'},{name:'葛永莉',groudName:'待定'},
                     // {name:'徐静蕾',groudName:'待定'},{name:'徐静蕾',groudName:'待定'},{name:'徐静蕾',groudName:'待定'},{name:'徐静蕾',groudName:'待定'}
                     ],
-        //选择的考情人员            
+        //选择的考情人员
         checkList:[],
-        jsonData:[]            
+        jsonData:[]
     }
     },
     watch: {
@@ -61,19 +61,18 @@ export default ({
           }
     },
     methods: {
-      submitData(){ 
+      submitData(){
           let _this = this
           let isSaturday  =  _this.isSaturday()
-          
+
           // if(!isSaturday){
           //   _this.$message('这一天不是星期六，不需要记录');
           //   return
           // }
           let tmpPostArray = []
-          debugger
           let postData = _this.jsonData
           let tmpObj = {date:_this.selectedDate,list:_this.checkList}
-          
+
           if(postData.length == 0){
             tmpPostArray.push(tmpObj)
           }
@@ -94,7 +93,7 @@ export default ({
               tmpPostArray.push(tmpObj)
             }
           }
-          
+
           let fullpath = 'http://localhost:8083/writejson'
       //    let fullpath = 'http://119.29.187.162:8083/writejson'
           axios
@@ -108,7 +107,7 @@ export default ({
     },
       isSaturday(){
         let week = this.getweekday(this.selectedDate)
-        let boolea =( week == "六") 
+        let boolea =( week == "六")
         return boolea
       },
       //根据年月日获取周几

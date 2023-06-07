@@ -14,7 +14,6 @@ export function objloader(path) {
             // 初始化
             mtl.preload();
             // 加载贴图
-            debugger
             objLoader.setMaterials(mtl);
             objLoader.load(`/static/${path}.obj`, (obj) => {
                 resolve({ mtl, obj })

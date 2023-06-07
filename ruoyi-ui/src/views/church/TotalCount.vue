@@ -116,7 +116,7 @@
                 		<el-button v-show="editType == '1'" type="primary" @click='editMarkDatas'>确定修改</el-button>
 					</el-col>
 				  </el-row>
-               
+
               </span>
             </el-dialog>
           </el-main>
@@ -132,7 +132,7 @@
               3.如需修改，点击头部日期，修改文本点击确定后自动更新数据进行统计排序
             </span>
           </el-row>
-            
+
           </el-footer>
         </el-container>
 </template>
@@ -193,11 +193,11 @@ export default ({
           let reg = /[0-9]{1,2}/;
           let tmpArr = this.editTextArea.split(reg);
           tmpArr = _this.deleteArrEmpty(tmpArr)
-          let arr = [] 
+          let arr = []
           let obj = {arr:[],ind:0}
               obj.ind = ind
               obj.arr = tmpArr
-                  
+
           for(let i= 0;i<_this.markDatas.length;i++){
             let item = _this.markDatas[i]
             if(item.ind == ind){
@@ -205,10 +205,10 @@ export default ({
             }
             else{
               arr.push(item)
-            }   
+            }
           }
           _this.markDatas = arr
-          
+
           this.startCalc()
           _this.dialogVisible = false
         },
@@ -220,7 +220,7 @@ export default ({
         //       .catch(_ => {});
         //   },
         checkData(obj) {
-          let _this = this 
+          let _this = this
           let markDatas = _this.markDatas
           if(obj.ind && obj.arr && (obj.arr.length>0) ){
             let bool = true
@@ -245,8 +245,8 @@ export default ({
             })
             return false
           }
-          
-          
+
+
         },
         deleteArrEmpty(arr){
           let tmpArr = []
@@ -271,13 +271,13 @@ export default ({
         },
         showDetail(item) {
           let str = ''
-          
+
           for(let i=0;i<item.arr.length;i++){
             let inde = i+1
             let strTmp = inde +item.arr[i]
             str = str+ strTmp
           }
-          
+
           this.editTextArea = str
           this.selectedData = item;
           this.dialogVisible = true;
@@ -287,7 +287,6 @@ export default ({
         },
         startCalc() {
           let _this = this;
-          debugger
           let arrData = _this.markDatas;
           let str1 = [];
           let str2 = [];
@@ -302,7 +301,6 @@ export default ({
             }
           }
           let tmpData = str1.sort();
-          debugger
           str2.push(tmpData[0])
           if (tmpData.length > 1) {
             for (let i = 1; i < tmpData.length; i++) {
