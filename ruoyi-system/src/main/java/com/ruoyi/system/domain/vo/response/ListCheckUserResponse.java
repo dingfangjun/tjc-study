@@ -40,9 +40,11 @@ public class ListCheckUserResponse {
         @ApiModelProperty("用户名称")
         private String userName;
 
+        @ApiModelProperty("考勤次数")
+        private Integer count;
+
         @ApiModelProperty("考勤时间")
-        @JsonFormat(timezone = "GMT+8", pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
-        private LocalDateTime checkTime;
+        private List<Record> records;
 
         public Integer getUserId() {
             return userId;
@@ -59,6 +61,28 @@ public class ListCheckUserResponse {
         public void setUserName(String userName) {
             this.userName = userName;
         }
+
+        public Integer getCount() {
+            return count;
+        }
+
+        public void setCount(Integer count) {
+            this.count = count;
+        }
+
+        public List<Record> getRecords() {
+            return records;
+        }
+
+        public void setRecords(List<Record> records) {
+            this.records = records;
+        }
+    }
+
+    public static class Record {
+        @ApiModelProperty("考勤时间")
+        @JsonFormat(timezone = "GMT+8", pattern = DateUtils.YYYY_MM_DD_HH_MM_SS)
+        private LocalDateTime checkTime;
 
         public LocalDateTime getCheckTime() {
             return checkTime;
