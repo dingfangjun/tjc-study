@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TFriendSquareMapper">
+    
+    <resultMap type="TFriendSquare" id="TFriendSquareResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="time"    column="time"    />
+        <result property="creater"    column="creater"    />
+        <result property="content"    column="content"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="tips"    column="tips"    />
+        <result property="tips2"    column="tips2"    />
+    </resultMap>
+
+    <sql id="selectTFriendSquareVo">
+        select id, name, time, creater, content, img_url, tips, tips2 from t_friend_square
+    </sql>
+
+    <select id="selectTFriendSquareList" parameterType="TFriendSquare" resultMap="TFriendSquareResult">
+        <include refid="selectTFriendSquareVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="time != null  and time != ''"> and time = #{time}</if>
+            <if test="creater != null  and creater != ''"> and creater = #{creater}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="imgUrl != null  and imgUrl != ''"> and img_url = #{imgUrl}</if>
+            <if test="tips != null  and tips != ''"> and tips = #{tips}</if>
+            <if test="tips2 != null  and tips2 != ''"> and tips2 = #{tips2}</if>
+        </where>
+    </select>
+    
+    <select id="selectTFriendSquareById" parameterType="Integer" resultMap="TFriendSquareResult">
+        <include refid="selectTFriendSquareVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTFriendSquare" parameterType="TFriendSquare" useGeneratedKeys="true" keyProperty="id">
+        insert into t_friend_square
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="time != null">time,</if>
+            <if test="creater != null">creater,</if>
+            <if test="content != null">content,</if>
+            <if test="imgUrl != null">img_url,</if>
+            <if test="tips != null">tips,</if>
+            <if test="tips2 != null">tips2,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="time != null">#{time},</if>
+            <if test="creater != null">#{creater},</if>
+            <if test="content != null">#{content},</if>
+            <if test="imgUrl != null">#{imgUrl},</if>
+            <if test="tips != null">#{tips},</if>
+            <if test="tips2 != null">#{tips2},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTFriendSquare" parameterType="TFriendSquare">
+        update t_friend_square
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="creater != null">creater = #{creater},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="imgUrl != null">img_url = #{imgUrl},</if>
+            <if test="tips != null">tips = #{tips},</if>
+            <if test="tips2 != null">tips2 = #{tips2},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTFriendSquareById" parameterType="Integer">
+        delete from t_friend_square where id = #{id}
+    </delete>
+
+    <delete id="deleteTFriendSquareByIds" parameterType="String">
+        delete from t_friend_square where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

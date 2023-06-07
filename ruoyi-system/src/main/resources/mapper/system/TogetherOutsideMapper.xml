@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TogetherOutsideMapper">
+    
+    <resultMap type="TogetherOutside" id="TogetherOutsideResult">
+        <result property="id"    column="id"    />
+        <result property="planTime"    column="plan_time"    />
+        <result property="realTime"    column="real_time"    />
+        <result property="address"    column="address"    />
+        <result property="userList"    column="user_list"    />
+        <result property="reason"    column="reason"    />
+        <result property="content"    column="content"    />
+        <result property="imgUrls"    column="img_urls"    />
+        <result property="really"    column="really"    />
+        <result property="other"    column="other"    />
+    </resultMap>
+
+    <sql id="selectTogetherOutsideVo">
+        select id, plan_time, real_time, address, user_list, reason, content, img_urls, really, other from together_outside
+    </sql>
+
+    <select id="selectTogetherOutsideList" parameterType="TogetherOutside" resultMap="TogetherOutsideResult">
+        <include refid="selectTogetherOutsideVo"/>
+        <where>  
+            <if test="planTime != null  and planTime != ''"> and plan_time = #{planTime}</if>
+            <if test="realTime != null  and realTime != ''"> and real_time = #{realTime}</if>
+            <if test="address != null  and address != ''"> and address like concat('%', #{address}, '%')</if>
+            <if test="userList != null  and userList != ''"> and user_list like concat('%', #{userList}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTogetherOutsideById" parameterType="Integer" resultMap="TogetherOutsideResult">
+        <include refid="selectTogetherOutsideVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTogetherOutside" parameterType="TogetherOutside" useGeneratedKeys="true" keyProperty="id">
+        insert into together_outside
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planTime != null">plan_time,</if>
+            <if test="realTime != null">real_time,</if>
+            <if test="address != null">address,</if>
+            <if test="userList != null">user_list,</if>
+            <if test="reason != null">reason,</if>
+            <if test="content != null">content,</if>
+            <if test="imgUrls != null">img_urls,</if>
+            <if test="really != null">really,</if>
+            <if test="other != null">other,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planTime != null">#{planTime},</if>
+            <if test="realTime != null">#{realTime},</if>
+            <if test="address != null">#{address},</if>
+            <if test="userList != null">#{userList},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="content != null">#{content},</if>
+            <if test="imgUrls != null">#{imgUrls},</if>
+            <if test="really != null">#{really},</if>
+            <if test="other != null">#{other},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTogetherOutside" parameterType="TogetherOutside">
+        update together_outside
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planTime != null">plan_time = #{planTime},</if>
+            <if test="realTime != null">real_time = #{realTime},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="userList != null">user_list = #{userList},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="imgUrls != null">img_urls = #{imgUrls},</if>
+            <if test="really != null">really = #{really},</if>
+            <if test="other != null">other = #{other},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTogetherOutsideById" parameterType="Integer">
+        delete from together_outside where id = #{id}
+    </delete>
+
+    <delete id="deleteTogetherOutsideByIds" parameterType="String">
+        delete from together_outside where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

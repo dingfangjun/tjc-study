@@ -1,0 +1,30 @@
+{
+  "id": "3492401",
+  "name": "element ui 自定义图标",
+  "font_family": "iconfont",
+  "css_prefix_text": "el-icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "77697",
+      "name": "点赞",
+      "font_class": "dianzan",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "1221242",
+      "name": "点赞",
+      "font_class": "dianzan1",
+      "unicode": "e609",
+      "unicode_decimal": 58889
+    },
+    {
+      "icon_id": "1244719",
+      "name": "不喜欢",
+      "font_class": "buxihuan",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    }
+  ]
+}

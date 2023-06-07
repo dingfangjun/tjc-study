@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RecordBoardMapper">
+    
+    <resultMap type="RecordBoard" id="RecordBoardResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userAnotherName"    column="user_another_name"    />
+        <result property="content"    column="content"    />
+        <result property="agreeCount"    column="agree_count"    />
+        <result property="disagreeCount"    column="disagree_count"    />
+    </resultMap>
+
+    <sql id="selectRecordBoardVo">
+        select id, user_name, user_another_name, content, agree_count, disagree_count from record_board
+    </sql>
+
+    <select id="selectRecordBoardList" parameterType="RecordBoard" resultMap="RecordBoardResult">
+        <include refid="selectRecordBoardVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="userAnotherName != null  and userAnotherName != ''"> and user_another_name like concat('%', #{userAnotherName}, '%')</if>
+            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectRecordBoardById" parameterType="Long" resultMap="RecordBoardResult">
+        <include refid="selectRecordBoardVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRecordBoard" parameterType="RecordBoard" useGeneratedKeys="true" keyProperty="id">
+        insert into record_board
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null">user_name,</if>
+            <if test="userAnotherName != null">user_another_name,</if>
+            <if test="content != null">content,</if>
+            <if test="agreeCount != null">agree_count,</if>
+            <if test="disagreeCount != null">disagree_count,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null">#{userName},</if>
+            <if test="userAnotherName != null">#{userAnotherName},</if>
+            <if test="content != null">#{content},</if>
+            <if test="agreeCount != null">#{agreeCount},</if>
+            <if test="disagreeCount != null">#{disagreeCount},</if>
+         </trim>
+    </insert>
+
+    <update id="updateRecordBoard" parameterType="RecordBoard">
+        update record_board
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userAnotherName != null">user_another_name = #{userAnotherName},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="agreeCount != null">agree_count = #{agreeCount},</if>
+            <if test="disagreeCount != null">disagree_count = #{disagreeCount},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteRecordBoardById" parameterType="Long">
+        delete from record_board where id = #{id}
+    </delete>
+
+    <delete id="deleteRecordBoardByIds" parameterType="String">
+        delete from record_board where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

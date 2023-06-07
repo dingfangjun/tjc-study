@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TSongsMapper">
+    
+    <resultMap type="TSongs" id="TSongsResult">
+        <result property="id"    column="id"    />
+        <result property="sortNo"    column="sort_no"    />
+        <result property="name"    column="name"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectTSongsVo">
+        select id, sort_no, name, content from t_songs
+    </sql>
+
+    <select id="selectTSongsList" parameterType="TSongs" resultMap="TSongsResult">
+        <include refid="selectTSongsVo"/>
+        <where>  
+            <if test="sortNo != null  and sortNo != ''"> and sort_no = #{sortNo}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectTSongsById" parameterType="Long" resultMap="TSongsResult">
+        <include refid="selectTSongsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTSongs" parameterType="TSongs" useGeneratedKeys="true" keyProperty="id">
+        insert into t_songs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sortNo != null">sort_no,</if>
+            <if test="name != null">name,</if>
+            <if test="content != null">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sortNo != null">#{sortNo},</if>
+            <if test="name != null">#{name},</if>
+            <if test="content != null">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTSongs" parameterType="TSongs">
+        update t_songs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sortNo != null">sort_no = #{sortNo},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="content != null">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTSongsById" parameterType="Long">
+        delete from t_songs where id = #{id}
+    </delete>
+
+    <delete id="deleteTSongsByIds" parameterType="String">
+        delete from t_songs where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

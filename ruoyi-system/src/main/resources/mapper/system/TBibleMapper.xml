@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TBibleMapper">
+    
+    <resultMap type="TBible" id="TBibleResult">
+        <result property="id"    column="id"    />
+        <result property="chapterName"    column="chapter_name"    />
+        <result property="sectionNo"    column="section_no"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+
+    <sql id="selectTBibleVo">
+        select id, chapter_name, section_no, content from t_bible
+    </sql>
+
+    <select id="selectTBibleList" parameterType="TBible" resultMap="TBibleResult">
+        <include refid="selectTBibleVo"/>
+        <where>  
+            <if test="chapterName != null  and chapterName != ''"> and chapter_name like concat('%', #{chapterName}, '%')</if>
+            <if test="sectionNo != null  and sectionNo != ''"> and section_no = #{sectionNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectTBibleById" parameterType="Integer" resultMap="TBibleResult">
+        <include refid="selectTBibleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTBible" parameterType="TBible" useGeneratedKeys="true" keyProperty="id">
+        insert into t_bible
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chapterName != null">chapter_name,</if>
+            <if test="sectionNo != null">section_no,</if>
+            <if test="content != null">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chapterName != null">#{chapterName},</if>
+            <if test="sectionNo != null">#{sectionNo},</if>
+            <if test="content != null">#{content},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTBible" parameterType="TBible">
+        update t_bible
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chapterName != null">chapter_name = #{chapterName},</if>
+            <if test="sectionNo != null">section_no = #{sectionNo},</if>
+            <if test="content != null">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTBibleById" parameterType="Integer">
+        delete from t_bible where id = #{id}
+    </delete>
+
+    <delete id="deleteTBibleByIds" parameterType="String">
+        delete from t_bible where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
