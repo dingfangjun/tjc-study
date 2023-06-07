@@ -49,6 +49,17 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
+          <el-form-item label="考勤时间">
+            <el-date-picker
+              v-model="dateRange"
+              style="width: 240px"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            ></el-date-picker>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -85,7 +96,6 @@
                 size="medium"
                 type="primary"
                 @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
               >考勤</el-button>
 
             </template>
@@ -116,7 +126,6 @@ import {
 } from "@/api/system/user";
 import {saveCheck} from "@/api/system/check";
 import {treeselect} from "@/api/system/dept";
-import {getToken} from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -140,22 +149,14 @@ export default {
       total: 0,
       // 用户表格数据
       userList: null,
-      // 弹出层标题
-      title: "",
       // 片区树选项
       deptOptions: undefined,
       // 是否显示弹出层
       open: false,
       // 片区名称
       deptName: undefined,
-      // 默认密码
-      initPassword: undefined,
       // 日期范围
       dateRange: [],
-      // 岗位选项
-      postOptions: [],
-      // 角色选项
-      roleOptions: [],
       // 表单参数
       form: {},
 
@@ -170,7 +171,6 @@ export default {
         pageSize: 10,
         userName: undefined,
         phonenumber: undefined,
-        status: undefined,
         deptId: undefined
       },
       // 列信息
@@ -181,9 +181,7 @@ export default {
         {key: 3, label: `手机号码`, visible: true},
         {key: 4, label: `考勤次数`, visible: true},
         {key: 5, label: `上次考勤时间`, visible: true}
-      ],
-      // 表单校验
-
+      ]
     };
   },
   watch: {
@@ -195,9 +193,6 @@ export default {
   created() {
     this.getList();
     this.getDeptTree();
-    this.getConfigKey("sys.user.initPassword").then(response => {
-      this.initPassword = response.msg;
-    });
   },
   methods: {
     /** 查询用户列表 */
@@ -226,32 +221,6 @@ export default {
       this.queryParams.deptId = data.id;
       this.handleQuery();
     },
-
-    // 取消按钮
-    cancel() {
-      this.open = false;
-      this.reset();
-    },
-    // 表单重置
-    reset() {
-      this.form = {
-        userId: undefined,
-        deptId: undefined,
-        userName: undefined,
-        nickName: undefined,
-        count: undefined,
-        checkTime: undefined,
-        password: undefined,
-        phonenumber: undefined,
-        email: undefined,
-        sex: undefined,
-        status: "0",
-        remark: undefined,
-        postIds: [],
-        roleIds: []
-      };
-      this.resetForm("form");
-    },
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
@@ -275,7 +244,6 @@ export default {
 
     /** 考勤按钮操作 */
     handleUpdate(row) {
-      this.reset();
       const userId = row.userId || this.ids;
       let param = {"userId": userId};
       saveCheck(param).then(response => {

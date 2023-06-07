@@ -18,4 +18,40 @@
         record_id, user_id, create_by, create_time, update_by, update_time, remark
     </sql>
 
+
+    <resultMap id="listCheckUserMap" type="com.ruoyi.system.domain.vo.response.ListCheckUserResponse">
+        <result property="deptId" column="dept_id" />
+        <result property="deptName" column="dept_name" />
+        <collection property="checkUserList"
+                    ofType="com.ruoyi.system.domain.vo.response.ListCheckUserResponse$CheckUser">
+        <result property="userId" column="user_id" />
+        <result property="userName" column="user_name" />
+        <result property="checkTime" column="check_time" />
+        </collection>
+    </resultMap>
+
+    <select id="listCheckUser" resultMap="listCheckUserMap">
+        SELECT sd.dept_id,
+               sd.dept_name,
+               su.user_id,
+               su.user_name,
+               cr.create_time AS check_time
+        FROM check_record cr
+                     INNER JOIN sys_user su ON su.user_id = cr.user_id
+                     INNER JOIN sys_dept sd ON sd.dept_id = su.dept_id
+        <where>
+            <if test="request.deptId != null">
+                AND sd.dept_id = #{request.deptId}
+            </if>
+            <if test="request.userId != null">
+                AND cr.user_id = #{request.userId}
+            </if>
+            <if test="request.startTime != null and request.startTime != ''">
+                AND cr.create_time >= #{request.startTime}
+            </if>
+            <if test="request.endTime != null and request.endTime != ''">
+                AND cr.create_time &lt;= #{request.endTime}
+            </if>
+        </where>
+    </select>
 </mapper>

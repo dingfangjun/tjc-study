@@ -7,9 +7,12 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.BeanValidators;
 import com.ruoyi.system.domain.CheckRecord;
+import com.ruoyi.system.domain.vo.request.ListCheckUserRequest;
 import com.ruoyi.system.service.CheckRecordService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +39,8 @@ public class CheckRecordController extends BaseController {
     private CheckRecordService service;
     @Autowired
     private Validator validator;
+    @Value("${check:day}")
+    private String checkDay;
 
     /**
      * 分页列表
@@ -136,12 +141,18 @@ public class CheckRecordController extends BaseController {
         if (!Objects.isNull(checkRecord)) {
             //是否超过一个星期
             long day = Duration.between(checkRecord.getCreateTime(), LocalDateTime.now()).toDays();
-            if (day < 7) {
+            if (day < Long.parseLong(checkDay)) {
                 return AjaxResult.warn(ServerConstants.REPEAT_CHECK);
             }
         }
         CheckRecord record = CheckRecord.builder().userId(userId).build();
         return AjaxResult.success(this.service.save(record));
+    }
+
+    @ApiOperation("查询出勤")
+    @PostMapping("listCheckUser")
+    public AjaxResult listCheckUser(@RequestBody ListCheckUserRequest request) {
+        return AjaxResult.success(this.service.listCheckUser(request));
     }
 
 }

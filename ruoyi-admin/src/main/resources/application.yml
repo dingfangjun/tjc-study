@@ -128,3 +128,7 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+#考勤限制重复天数
+check:
+  day: 6
