@@ -64,7 +64,8 @@ Vue.component('Editor', Editor)
 Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
 Vue.component('ImagePreview', ImagePreview)
-
+import JsonExcel from "vue-json-excel";
+Vue.component("downloadExcel", JsonExcel);
 Vue.use(directive)
 Vue.use(plugins)
 Vue.use(VueMeta)

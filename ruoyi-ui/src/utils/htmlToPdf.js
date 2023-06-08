@@ -5,13 +5,13 @@ export default{
   install (Vue, options) {
     Vue.prototype.getPdf = function (fileName='pdf文件') {
       // 当下载pdf时，若不在页面顶部会造成PDF样式不对,所以先回到页面顶部再下载
-      let top = document.getElementById('pdfDom');
+      let top = document.getElementById('totalCount');
       if (top != null) {
         top.scrollIntoView();
         top = null;
       }
       let title = this.exportPDFtitle;
-      html2Canvas(document.querySelector('#pdfDom'), {
+      html2Canvas(document.querySelector('#totalCount'), {
         allowTaint: true
       }).then(function (canvas) {
         // 获取canvas画布的宽高
