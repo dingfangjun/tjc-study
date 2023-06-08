@@ -57,7 +57,7 @@
         cr.user_id
         <where>
             <if test="request.deptId != null">
-                AND sd.dept_id = #{request.deptId}
+                AND (sd.dept_id = #{request.deptId} OR sd.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{request.deptId}, ancestors) ))
             </if>
             <if test="request.userId != null">
                 AND cr.user_id = #{request.userId}
