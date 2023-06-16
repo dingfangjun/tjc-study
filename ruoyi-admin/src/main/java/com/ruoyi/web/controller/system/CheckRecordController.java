@@ -39,7 +39,7 @@ public class CheckRecordController extends BaseController {
     private CheckRecordService service;
     @Autowired
     private Validator validator;
-    @Value("${check:day}")
+    @Value("${check.day}")
     private String checkDay;
 
     /**
