@@ -1,91 +1,289 @@
 <template>
-  <div>
+  <div >
+    <div id="totalCount">
     <el-row>
       <el-col :span="6">
         <el-date-picker
-          v-model="selectMonth"
-          type="month"
-          value-format="yyyy-MM"
-          placeholder="选择月">
+        v-model="selectTime"
+        type="daterange"
+        :align="'right'"
+        unlink-panels
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :picker-options="pickerOptions">
         </el-date-picker>
       </el-col>
       <el-col :span="6">
-        <el-select v-model="countType">
-          <el-option
-            v-for="item in typeOptions"
-            :key="item.id"
-            :label="item.name"
-            :value="item.value"
-          />
+        <el-select v-model="searchParams.deptId" placeholder="请选择部门">
+          <!-- <el-option label="所有人" value=""></el-option> -->
+          <el-option label="社青" value="103"></el-option>
+          <el-option label="新青年" value="105"></el-option>
+          
         </el-select>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="2">
         <el-button type="primary" @click="searchData">查询</el-button>
-        <el-button type="primary" @click="exportPdf">导出pdf</el-button>
+      </el-col>
+      <el-col :span="2">
+        <el-button type="primary" @click="exportPdf">导出pdf</el-button></el-col>
+      <el-col :span="3">
+        <download-excel 
+            style="width: 60px;"
+            class = "export-excel-wrapper"
+            :data="tableData"
+            :fields="fieldsArray"
+            :name="'统计表.xls'"
+            :before-generate="startDownload"
+        >
+            <el-button size="small" type="primary" plain >导出excel</el-button>
+        </download-excel>
       </el-col>
     </el-row>
-    <div id="pdfDom" style="width:100%;height:500px"></div>
+    <div id="pdfDom" style="width:100%;height:500px;margin-top: 20px;margin-bottom: 20px;"></div>
+    <a-table bordered :columns="tableColumns"  :data-source="tableData">
+      <span slot="renderText" slot-scope="text"><span style="color:rgb(49,126,246)" v-if="text == '考勤'">考勤</span><span style="color:rgb(250, 16, 16)" v-if="text == '缺勤'">缺勤</span></span>
+    </a-table>
+    <el-dialog title="个人考勤详情" :visible.sync="dialogVisible"  width="30%" :center="true">
+      <el-table
+          :data="userTimeList"
+          style="width: 100%">
+          <el-table-column
+            prop="userName"
+            label="姓名"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="checkTime"
+            label="考勤时间">
+          </el-table-column>
+        </el-table>
+    </el-dialog>
+  </div>
   </div>
 </template>
 <script>
-import {listRecordsLogsByMonth} from "@/api/system/records";
-import {listSaturdayLogsByMonth} from "@/api/system/logs";
 import moment from "moment"
 import echarts from 'echarts'
-
+import request from '@/utils/request'
 export default ({
   name: 'CategoryBar',
   dicts: ['sys_user_list'],
   data() {
     return {
-      userListOption: [],
-      selectMonth: '',
-      countType: "everyDayMark",
-      typeOptions: [{id: 1, name: "每日读经打卡", value: 'everyDayMark'}, {
-        id: 2,
-        name: "周六聚会打卡",
-        value: 'saturDayMark'
-      }]
+      selectTime:[],
+      searchParams:{'userId':null,'deptId':'103','startTime':"2023-05-01 00:00:00","endTime":"2023-06-07 23:59:59"},
+      dialogVisible:false,
+      userTimeList:[],
+      pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        echartsArrayData:[],
+        tableData:[],
+        tableColumns:[],
+        fieldsArray:{}
     }
   },
   methods: {
-    /** 查询每日读经列表 */
-    getEveryDayLogList() {
-      listRecordsLogsByMonth({pageNum: 1, pageSize: 40, date: this.selectMonth}).then(response => {
-        if (response.total > 0) {
-          let tmpArray = []
-          response.rows.forEach(item => {
-            let thisArray = item.userlist.split(',')
-            tmpArray = tmpArray.concat(thisArray)
-          })
-          this.createEcharts(tmpArray)
-        }
-      });
-    },
-    /** 查询周六记录列表 */
-    getSaturdayLogList() {
-      listSaturdayLogsByMonth({date: this.selectMonth, pageNum: 1, pageSize: 40}).then(response => {
-        if (response.total > 0) {
-
-          let tmpArray = []
-          response.rows.forEach(item => {
-            let thisArray = item.userList.split(',')
-            tmpArray = tmpArray.concat(thisArray)
-          })
-          this.createEcharts(tmpArray)
-        }
-      });
-    },
     searchData() {
+      let _this = this
       let thisMonth = moment(new Date()).format("yyyy-MM")
-      if (this.selectMonth === "") {
-        this.selectMonth = thisMonth
-      }
-      if (this.countType === "everyDayMark") {
-        this.getEveryDayLogList()
-      } else {
-        this.getSaturdayLogList()
-      }
+     // let timeArray = this.selectTime
+      this.searchParams.startTime = moment(this.selectTime[0]).format("yyyy-MM-DD 00:00:00")
+      this.searchParams.endTime = moment(this.selectTime[1]).format("yyyy-MM-DD 23:59:59")
+      console.log(this.searchParams.startTime)
+      console.log(this.searchParams.endTime)
+      request({
+          url: '/check-record/listCheckUser',
+          method: 'post',
+          data: this.searchParams
+        }).then(res =>{
+          if(res.data && res.data.length>0){
+            let resData = res.data[0]
+            let deptName = resData.deptName
+            let resArray = resData.checkUserList
+            _this.echartsArrayData = resArray
+            _this.renderEcharts(deptName,resArray)
+            _this.renderTable(resArray)
+          }
+          else{
+            _this.tableData = []
+            _this.echartsArrayData = []
+            _this.renderEcharts('无数据',[])
+          }
+        })
+    },
+    renderTable(arrayData){
+      let columnsNameArray = []
+      let userArray = []
+      arrayData.forEach(item =>{
+        userArray.push(item.userName)
+        item.records.forEach(jtem =>{
+          columnsNameArray.push(jtem.checkTime.substring(0,10))
+        })
+      })
+      columnsNameArray =Array.from(new Set(columnsNameArray)).sort() 
+      let columns = []
+      let fieldsArray = {"人员":"userName"}
+      columns.push({title:'人员',
+      dataIndex: 'userName'})
+      columnsNameArray.forEach(item =>{
+        let tmpObj ={
+          dataIndex: item,
+            title: item,
+            scopedSlots: { customRender: 'renderText' },
+          }
+          columns.push(tmpObj) 
+          fieldsArray[item] = item
+      })  
+      console.dir(fieldsArray)
+      console.dir(columns)
+      this.tableColumns =  columns 
+      this.fieldsArray = fieldsArray
+      let tableData = []
+      arrayData.forEach(item =>{
+        let tmpObj = {'userName':item.userName,key:item.userName}
+        columnsNameArray.forEach((jtem,index) =>{
+              tmpObj[jtem] = '缺勤'
+        })
+        item.records.forEach(jtem =>{
+          let tmpTime = jtem.checkTime.substring(0,10)
+          tmpObj[tmpTime] = '考勤'
+        })
+        tableData.push(tmpObj)
+      })
+      debugger
+      this.tableData = tableData
+    },
+    renderEcharts(deptName,arrayData){
+      let _this = this
+      let tmpXArray = []
+      let tmpYArray = []
+      arrayData.forEach(item =>{
+        tmpXArray.push(item.userName)
+        tmpYArray.push(item.count)
+      })
+      let chartDom = document.getElementById("pdfDom")
+      let myChart = echarts.init(chartDom);
+      let option  = {
+            backgroundColor: '#081736',
+              tooltip: {},
+              grid: {
+                  left: '5%',
+                  right: '6%',
+                  bottom: '15%',
+                  top: '28%',
+                  containLabel: true
+              },
+              xAxis: {
+                  type: 'category',
+                  data: tmpXArray,
+
+                  axisLine: {
+                      show: true,
+                      lineStyle: {
+                          color: '#05598F',
+                          // width: 1
+                      },
+                  },
+                  axisLabel: {
+                      interval: 0,
+                      rotate: 0,
+                      textStyle: {
+                          color: '#fff',
+                          fontSize: 12
+                      },
+                  },
+                  axisTick: {
+                      show: false,
+                  },
+              },
+              yAxis: {
+                  type: 'value',
+                  // min: 0,
+                  // max: 140,
+                  splitLine: { //分割线配置
+                      lineStyle: {
+                          color: "#05598F",
+                      }
+                  },
+                  axisLine: {
+                      show: true,
+                      lineStyle: {
+                          color: '#758FA6'
+                      }
+                  },
+                  axisTick: {
+                      show: false,
+                  },
+                  axisLabel: {
+                      textStyle: {
+                          color: '#fff',
+                          fontSize: 16
+                      },
+                  },
+              },
+              series: [{
+                  barWidth: 14,
+                  data: tmpYArray,
+                  type: 'bar',
+                  itemStyle: {
+                      normal: {
+                          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                              offset: 0,
+                              color: 'rgba(0,244,255,1)' // 0% 处的颜色
+                          }, {
+                              offset: 1,
+                              color: 'rgba(0,77,167,1)' // 100% 处的颜色
+                          }], false),
+                          barBorderRadius: [30, 30, 30, 30],
+                      }
+                  },
+              }]
+          };
+      myChart.setOption(option)    
+      myChart.on('click',function(params){
+          _this.showDetail(params.name)
+      })  
+    },
+    showDetail(name){
+      let echartsArrayData = this.echartsArrayData
+      this.dialogVisible = true
+      let tmpArray = []
+      echartsArrayData.forEach(item =>{
+        if(item.userName === name){
+          let recordsList = item.records
+          recordsList.forEach(jtem =>{
+            let tmpObj = {userName:name,checkTime:jtem.checkTime}
+            tmpArray.push(tmpObj)
+          })
+        }
+      })
+      this.userTimeList = tmpArray
     },
     createEcharts(dataRows) {
 
@@ -139,27 +337,16 @@ export default ({
       }
       myChart.setOption(option)
     },
-    getUserNameById(id) {
-      let name = ""
-      this.userListOption.forEach(
-        item => {
-          if (item.dictValue == id) {
-            name = item.dictLabel
-          }
-        }
-      )
-      return name
-    },
     exportPdf() {
       this.getPdf()
     }
   },
   mounted() {
-    this.getDicts("sys_user_list").then(response => {
-      let tmpArray = response.data
-      this.userListOption = tmpArray
-      this.searchData()
-    });
+    const end = new Date();
+    const start = new Date();
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+    this.selectTime = [start, end]
+    this.searchData()
   }
 })
 </script>
