@@ -87,6 +87,13 @@ public class SysUser extends BaseEntity {
     @Excel(name = "帐号状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+
+
+    /**
+     * 片区
+     */
+    private String area;
+
     /**
      * 删除标志（0代表存在 2代表删除）
      */
@@ -253,6 +260,14 @@ public class SysUser extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
     }
 
     public String getDelFlag() {
